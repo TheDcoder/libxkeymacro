@@ -1,6 +1,6 @@
 #include <stdlib.h>
 #include <string.h>
-#include "keyboard_shortcuts.h"
+#include "xkeymacro.h"
 
 bool xkeymacro_parse(const char *shortcut, KeySym *keysym, unsigned int *modifiers) {
 	// Copy shortcut into a temporary string
