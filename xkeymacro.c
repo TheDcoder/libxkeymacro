@@ -2,6 +2,10 @@
 #include <string.h>
 #include "xkeymacro.h"
 
+void xkeymacro_set_display(struct XKeyMacroInstance *instance, char *display_name) {
+	instance->display = XOpenDisplay(display_name);
+}
+
 bool xkeymacro_parse(const char *shortcut, KeySym *keysym, unsigned int *modifiers) {
 	// Copy shortcut into a temporary string
 	char *string = malloc(strlen(shortcut) + 1);
