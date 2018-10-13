@@ -2,6 +2,14 @@
 #include <string.h>
 #include "xkeymacro.h"
 
+struct XKeyMacroInstance *xkeymacro_new_instance(Display *display) {
+	struct XKeyMacroInstance *instance = malloc(sizeof(struct XKeyMacroInstance));
+	if (instance == NULL) return NULL;
+	instance->display = display;
+	instance->grab_window = DefaultRootWindow(display);
+	return instance;
+}
+
 void xkeymacro_set_display(struct XKeyMacroInstance *instance, char *display_name) {
 	instance->display = XOpenDisplay(display_name);
 }

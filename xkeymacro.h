@@ -14,8 +14,10 @@ struct XKeyMacro {
 
 struct XKeyMacroInstance {
 	Display *display;
+	Window *grab_window;
 };
 
+struct XKeyMacroInstance *xkeymacro_new_instance(Display *display);
 void xkeymacro_set_display(struct XKeyMacroInstance *instance, char *display_name);
 bool xkeymacro_parse(const char *shortcut, struct XKeyMacro *macro, struct XKeyMacroInstance *instance);
 
