@@ -32,5 +32,6 @@ struct XKeyMacroNode *xkeymacro_add(struct XKeyMacroInstance *instance, struct X
 bool xkeymacro_remove(struct XKeyMacroInstance *instance, struct XKeyMacro *macro, bool ungrab);
 struct XKeyMacroNode *xkeymacro_find(struct XKeyMacroInstance *instance, struct XKeyMacro *macro);
 struct XKeyMacro *xkeymacro_next_event(struct XKeyMacroInstance *instance);
+void xkeymacro_free(struct XKeyMacroInstance *instance);
 
 #endif
