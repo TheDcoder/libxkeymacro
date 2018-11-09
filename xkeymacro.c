@@ -15,32 +15,31 @@ void xkeymacro_set_display(struct XKeyMacroInstance *instance, char *display_nam
 	instance->display = XOpenDisplay(display_name);
 }
 
-bool xkeymacro_parse(const char *shortcut, struct XKeyMacro *macro, struct XKeyMacroInstance *instance) {
-	// Reset the macro modifiers
+struct XKeyMacro *xkeymacro_parse(const char *shortcut, struct XKeyMacroInstance *instance) {
+	// Allocate memory for macro
+	struct XKeyMacro *macro = malloc(sizeof(struct XKeyMacro));
+	if (!macro) return NULL;
+	// Set the macro modifiers
 	macro->modifiers = 0;
-	// Copy shortcut into a temporary string
-	char *string = malloc(strlen(shortcut) + 1);
-	if (string == NULL) return false;
-	strcpy(string, shortcut);
 	// Parse the string
-	char *token = strtok(string, XKEYMACRO_SHORTCUT_DELIMITER);
-	while (token) {
-		if (strcasecmp(token, "Ctrl") == 0) {
+	const char *token = shortcut;
+	while (true) {
+		size_t token_len = strcspn(token, XKEYMACRO_SHORTCUT_DELIMITER);
+		if (strncasecmp(token, "Ctrl", token_len) == 0) {
 			macro->modifiers |= ControlMask;
-		} else if (strcasecmp(token, "Alt") == 0) {
+		} else if (strncasecmp(token, "Alt", token_len) == 0) {
 			macro->modifiers |= Mod1Mask;
-		} else if (strcasecmp(token, "Shift") == 0) {
+		} else if (strncasecmp(token, "Shift", token_len) == 0) {
 			macro->modifiers |= ShiftMask;
 		} else {
 			macro->symbol = XStringToKeysym(token);
 			if (instance) macro->code = XKeysymToKeycode(instance->display, macro->symbol);
 			break;
 		}
-		token = strtok(NULL, XKEYMACRO_SHORTCUT_DELIMITER);
+		token += token_len + 1;
+		if (*token == '\0') break;
 	}
-	// Free the string
-	free(string);
-	return true;
+	return macro;
 }
 
 struct XKeyMacroNode *xkeymacro_add(struct XKeyMacroInstance *instance, struct XKeyMacro *macro, bool grab) {
