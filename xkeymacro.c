@@ -15,7 +15,7 @@ void xkeymacro_set_display(struct XKeyMacroInstance *instance, char *display_nam
 	instance->display = XOpenDisplay(display_name);
 }
 
-struct XKeyMacro *xkeymacro_parse(const char *shortcut, struct XKeyMacroInstance *instance) {
+struct XKeyMacro *xkeymacro_parse(struct XKeyMacroInstance *instance, const char *shortcut) {
 	// Allocate memory for macro
 	struct XKeyMacro *macro = malloc(sizeof(struct XKeyMacro));
 	if (!macro) return NULL;
