@@ -42,6 +42,17 @@ struct XKeyMacro *xkeymacro_parse(struct XKeyMacroInstance *instance, const char
 	return macro;
 }
 
+struct XKeyMacro *xkeymacro_add_simple(struct XKeyMacroInstance *instance, const char *shortcut) {
+	struct XKeyMacro *macro = xkeymacro_parse(instance, shortcut);
+	if (!macro) return NULL;
+	struct XKeyMacroNode *node = xkeymacro_add(instance, macro, true);
+	if (!node) {
+		free(macro);
+		return NULL;
+	}
+	return macro;
+}
+
 struct XKeyMacroNode *xkeymacro_add(struct XKeyMacroInstance *instance, struct XKeyMacro *macro, bool grab) {
 	struct XKeyMacroNode *new_node = malloc(sizeof(struct XKeyMacroNode));
 	if (!new_node) return NULL;
