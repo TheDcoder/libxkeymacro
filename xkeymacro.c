@@ -107,12 +107,12 @@ struct XKeyMacro *xkeymacro_next_event(struct XKeyMacroInstance *instance) {
 
 void xkeymacro_free(struct XKeyMacroInstance *instance) {
 	struct XKeyMacroNode *node = instance->latest_node;
-	struct XKeyMacroNode *next_node;
+	struct XKeyMacroNode *prev_node;
 	while (node) {
 		free(node->macro);
-		next_node = node->next;
+		prev_node = node->prev;
 		free(node);
-		node = next_node;
+		node = prev_node;
 	}
 	free(instance);
 }
