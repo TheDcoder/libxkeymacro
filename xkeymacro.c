@@ -1,3 +1,4 @@
+#include <poll.h>
 #include <stdlib.h>
 #include <string.h>
 #include "xkeymacro.h"
@@ -92,16 +93,22 @@ struct XKeyMacro *xkeymacro_next_event(struct XKeyMacroInstance *instance) {
 	XEvent event;
 	struct XKeyMacroNode *target_node = instance->latest_node;
 	while (true) {
-		XNextEvent(instance->display, &event);
-		if (event.type != KeyPress) continue;
-		while (target_node) {
-			if (
-				target_node->macro->code == event.xkey.keycode
-				&&
-				target_node->macro->modifiers == event.xkey.state
-			) return target_node->macro;
-			target_node = target_node->prev;
+		if (XPending(instance->display) > 0) {
+			XNextEvent(instance->display, &event);
+			if (event.type != KeyPress) continue;
+			while (target_node) {
+				if (
+					target_node->macro->code == event.xkey.keycode
+					&&
+					target_node->macro->modifiers == event.xkey.state
+				) return target_node->macro;
+				target_node = target_node->prev;
+			}
 		}
+		poll(&(struct pollfd){
+			.fd = ConnectionNumber(instance->display),
+			.events = POLLIN,
+		}, 1, -1);
 	}
 }
 
